@@ -35,5 +35,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('docs/',schema_view.with_ui('swagger')),
     path('api/v1/',include('hotel.urls')),
-    path('api/v1/',include('account.urls'))
+    path('api/v1/account/',include('account.urls'))
 ]
+
+urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
