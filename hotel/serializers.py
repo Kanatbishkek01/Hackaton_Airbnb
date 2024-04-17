@@ -14,6 +14,7 @@ class HotelSerializer(ModelSerializer):
     def to_representation(self, instance):
         repr = super().to_representation(instance)
         repr['images'] = HotelImageSerializer(instance.images.all(),many=True).data
+        repr['comments'] = [f'Author: {i.author} | Rating: {i.rating} | Message : {i.body} | Likes: {i.likes.count()}' for i in instance.comments.all()]
         return repr
     
 class HotelListSerializer(ModelSerializer):
