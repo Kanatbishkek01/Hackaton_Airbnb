@@ -46,6 +46,11 @@ class CommentSerializer(ModelSerializer):
     def create(self, validated_data):
         user = self.context.get('request').user
         validated_data['author'] = user
+        hotel = Hotel.objects.get(slug=validated_data['hotel'])
+        hotel.comments_q += 1
+        hotel.comments_rating += validated_data['rating']
+        hotel.rating = hotel.comments_rating / hotel.comments_q
+        hotel.save()
         return super().create(validated_data)
     
     def to_representation(self, instance):
