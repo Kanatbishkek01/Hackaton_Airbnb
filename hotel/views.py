@@ -7,6 +7,8 @@ from rest_framework.filters import SearchFilter
 # from .permissions import IsAuthorPermission,BlockPermission
 from .serializers import *
 from .models import *
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 class PermissionMixin:
     def get_permissions(self):
@@ -25,6 +27,8 @@ class HotelViewSet(PermissionMixin, ModelViewSet):
     filterset_fileds = ['category','price']
     search_fields = ['title','price', 'allowed_dates']
 
+
+
     def get_serializer_class(self):
         if self.action == 'list':
             return HotelListSerializer
@@ -36,6 +40,9 @@ class CommentViewSet(PermissionMixin, ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
 
+    @method_decorator(cache_page(60*2))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
     
 class HotelImageViewSet(ModelViewSet):
     queryset = HotelImage.objects.all()
