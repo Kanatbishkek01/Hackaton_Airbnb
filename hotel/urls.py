@@ -4,10 +4,11 @@ from .views import *
 
 router = DefaultRouter()
 router.register('hotel', HotelViewSet)
-# router.register('like', LikeViewSet)
+router.register('like', LikeViewSet)
 router.register('comments', CommentViewSet)
-router.register('images', HotelImageViewSet),
+router.register('images', HotelImageViewSet)
 router.register('category',CategoryViewSet)
+router.register('favorites', FavoritesViewSet)
 
 urlpatterns = [
     path('',include(router.urls))

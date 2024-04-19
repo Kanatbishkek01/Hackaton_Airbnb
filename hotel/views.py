@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated,IsAdminUser,AllowAny
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
-# from .permissions import IsAuthorPermission,BlockPermission
+from .permissions import IsAuthorPermission,BlockPermissions
 from .serializers import *
 from .models import *
 from django.utils.decorators import method_decorator
@@ -43,6 +43,37 @@ class CommentViewSet(PermissionMixin, ModelViewSet):
     @method_decorator(cache_page(60*2))
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
+    
+
+class LikeViewSet(ModelViewSet):
+    queryset = Like.objects.all()
+    serializer_class = LikeSerializer
+
+    def get_permissions(self):
+        if self.action == 'create':
+            self.permission_classes = [IsAuthenticated]
+        elif self.action in ('retrieve','list'):
+            self.permission_classes = [IsAuthorPermission,IsAdminUser]
+        elif self.action =='destroy':
+            self.permission_classes = [IsAuthorPermission]
+        else:
+            self.permission_classes = [BlockPermissions]
+        return super().get_permissions()
+
+class FavoritesViewSet(ModelViewSet):
+    queryset = Favorites.objects.all()
+    serializer_class = FavoritesSerializer
+
+    def get_permissions(self):
+        if self.action == 'create':
+            self.permission_classes = [IsAuthenticated]
+        elif self.action in ('retrieve','list'):
+            self.permission_classes = [IsAuthorPermission,IsAdminUser]
+        elif self.action =='destroy':
+            self.permission_classes = [IsAuthorPermission]
+        else:
+            self.permission_classes = [BlockPermissions]
+        return super().get_permissions()
     
 class HotelImageViewSet(ModelViewSet):
     queryset = HotelImage.objects.all()

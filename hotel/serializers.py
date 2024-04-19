@@ -38,6 +38,20 @@ class LikeSerializer(ModelSerializer):
         validated_data['author'] = user
         return super().create(validated_data)
     
+class FavoritesSerializer(ModelSerializer):
+    author = ReadOnlyField(source = 'author.email')
+
+    class Meta:
+        model = Favorites
+        fields = '__all__'
+    
+    def create(self, validated_data):
+        user = self.context.get('request').user
+        validated_data['author'] = user
+        return super().create(validated_data)
+    
+
+
 class CommentSerializer(ModelSerializer):
     author = ReadOnlyField(source='author.name')
     class Meta:
