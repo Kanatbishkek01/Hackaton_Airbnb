@@ -69,4 +69,11 @@ class Like(models.Model):
     comment = models.ForeignKey(Comment,on_delete=models.CASCADE,related_name='likes',blank=True,null=True)
 
     def __str__(self) -> str:
-        return f'liked by {self.author.name}'
+        return f'liked by {self.author.email}'
+    
+class Favorites(models.Model):
+    author = models.ForeignKey(User,on_delete=models.CASCADE,related_name='favorites')
+    hotel = models.ForeignKey(Hotel,on_delete=models.CASCADE,related_name='favorites')
+
+    def __str__(self) -> str:
+        return f'{self.hotel.title} is {self.author.email} favorite'

@@ -1,5 +1,6 @@
 from config.celery import app
 from .utils import send_activation_code
+from django.core.mail import send_mail
 
 
 @app.task
